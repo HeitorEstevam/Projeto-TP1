@@ -150,8 +150,99 @@ Gerente* CntrApresentacaoGerente::autenticar() {
 }
 
 // Stubs (Vazios para compilar)
-void CntrApresentacaoGerente::editarConta(Gerente* gerente) { std::cout << "[Em desenvolvimento...]\n"; }
-void CntrApresentacaoGerente::excluirConta(Gerente* gerente) { std::cout << "[Em desenvolvimento...]\n"; }
+void CntrApresentacaoGerente::editarConta(Gerente* gerenteLogado) {
+    std::cout << "\n--- EDITAR CONTA DE GERENTE ---\n";
+    std::string entrada;
+    
+    Nome novoNome;
+    Email novoEmail;
+    Senha novaSenha;
+    Ramal novoRamal;
+
+    // Novo Nome
+    while (true) {
+        try {
+            std::cout << "Novo Nome (atual: " << gerenteLogado->getNome().getValor() << "): ";
+            std::getline(std::cin >> std::ws, entrada);
+            if (entrada.empty()) { // Permite manter o valor atual
+                novoNome = gerenteLogado->getNome();
+                break;
+            }
+            novoNome.setValor(entrada);
+            break;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Erro: " << e.what() << "\nRegra: 5-20 chars, iniciais maiusculas.\n";
+        }
+    }
+
+    // Novo E-mail (chave primária, não editável diretamente)
+    // Requisito: Não é possível editar dado que identifica registro (chave primária)
+    std::cout << "Email (nao editavel): " << gerenteLogado->getEmail().getValor() << "\n";
+    novoEmail = gerenteLogado->getEmail();
+
+
+    // Nova Senha
+    while (true) {
+        try {
+            std::cout << "Nova Senha (atual: " << gerenteLogado->getSenha().getValor() << "): ";
+            std::getline(std::cin, entrada);
+            if (entrada.empty()) { // Permite manter o valor atual
+                novaSenha = gerenteLogado->getSenha();
+                break;
+            }
+            novaSenha.setValor(entrada);
+            break;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Erro: " << e.what() << "\nRegra: 5 chars (Maiusc, Minusc, Digito, Especial).\n";
+        }
+    }
+
+    // Novo Ramal
+    while (true) {
+        try {
+            std::cout << "Novo Ramal (atual: " << gerenteLogado->getRamal().getValor() << "): ";
+            std::getline(std::cin, entrada);
+            if (entrada.empty()) { // Permite manter o valor atual
+                novoRamal = gerenteLogado->getRamal();
+                break;
+            }
+            novoRamal.setValor(entrada);
+            break;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Erro: " << e.what() << "\n";
+        }
+    }
+
+    Gerente gerenteAtualizado(novoNome, novoEmail, novaSenha, novoRamal);
+
+    if (this->servicoGerente->editarGerente(gerenteAtualizado)) {
+        // Atualiza o objeto logado para refletir as mudanças
+        gerenteLogado->setNome(novoNome);
+        gerenteLogado->setSenha(novaSenha);
+        gerenteLogado->setRamal(novoRamal);
+        std::cout << "\nConta atualizada com sucesso!\n";
+    } else {
+        std::cerr << "Erro ao atualizar conta.\n";
+    }
+}
+
+void CntrApresentacaoGerente::excluirConta(Gerente* gerenteLogado) {
+    std::cout << "\n--- EXCLUIR CONTA DE GERENTE ---\n";
+    std::string confirmacao;
+    std::cout << "Tem certeza que deseja excluir sua conta (" << gerenteLogado->getEmail().getValor() << ")? (s/n): ";
+    std::cin >> confirmacao;
+
+    if (confirmacao == "s" || confirmacao == "S") {
+        if (this->servicoGerente->excluirGerente(gerenteLogado->getEmail().getValor())) {
+            std::cout << "\nConta excluída com sucesso!\n";
+            gerenteLogado = nullptr; // Força logout após exclusão
+        } else {
+            std::cerr << "Erro ao excluir conta.\n";
+        }
+    } else {
+        std::cout << "Exclusão cancelada.\n";
+    }
+}
 
 
 // Hotel
@@ -238,8 +329,115 @@ void CntrApresentacaoHotel::listarHoteis() {
 }
 
 // Stubs
-void CntrApresentacaoHotel::editar(Gerente* gerenteLogado) { std::cout << "[Em desenvolvimento...]\n"; }
-void CntrApresentacaoHotel::excluir(Gerente* gerenteLogado) { std::cout << "[Em desenvolvimento...]\n"; }
+void CntrApresentacaoHotel::editar(Gerente* gerenteLogado) {
+    std::cout << "\n--- EDITAR HOTEL ---\n";
+    std::string codigoHotel;
+    std::string entrada;
+
+    listarHoteis(); // Mostra os hotéis disponíveis
+
+    std::cout << "\nInforme o Código do Hotel a ser editado (ou 0 para cancelar): ";
+    std::getline(std::cin >> std::ws, codigoHotel);
+
+    if (codigoHotel == "0") {
+        std::cout << "Edição cancelada.\n";
+        return;
+    }
+
+    Hotel* hotelExistente = this->servicoHotel->buscarHotel(codigoHotel);
+    if (!hotelExistente) {
+        std::cerr << "Erro: Hotel com código " << codigoHotel << " não encontrado.\n";
+        return;
+    }
+
+    Nome novoNome = hotelExistente->getNome();
+    Endereco novoEndereco = hotelExistente->getEndereco();
+    Telefone novoTelefone = hotelExistente->getTelefone();
+    Codigo codigoOriginal = hotelExistente->getCodigo(); // Código não é editável
+
+    // Edita Nome
+    while (true) {
+        try {
+            std::cout << "Novo Nome (atual: " << hotelExistente->getNome().getValor() << ", Enter para manter): ";
+            std::getline(std::cin, entrada);
+            if (entrada.empty()) break;
+            novoNome.setValor(entrada);
+            break;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Erro: " << e.what() << "\n";
+        }
+    }
+
+    // Edita Endereço
+    while (true) {
+        try {
+            std::cout << "Novo Endereço (atual: " << hotelExistente->getEndereco().getValor() << ", Enter para manter): ";
+            std::getline(std::cin, entrada);
+            if (entrada.empty()) break;
+            novoEndereco.setValor(entrada);
+            break;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Erro: " << e.what() << "\n";
+        }
+    }
+
+    // Edita Telefone
+    while (true) {
+        try {
+            std::cout << "Novo Telefone (atual: " << hotelExistente->getTelefone().getValor() << ", Enter para manter): ";
+            std::getline(std::cin, entrada);
+            if (entrada.empty()) break;
+            novoTelefone.setValor(entrada);
+            break;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Erro: " << e.what() << "\n";
+        }
+    }
+
+    Hotel hotelAtualizado(novoNome, novoEndereco, novoTelefone, codigoOriginal);
+    hotelAtualizado.setGerente(gerenteLogado); // Mantém o mesmo gerente
+
+    if (this->servicoHotel->editarHotel(hotelAtualizado)) {
+        std::cout << "\nHotel atualizado com sucesso!\n";
+    } else {
+        std::cerr << "Erro ao atualizar hotel.\n";
+    }
+}
+
+void CntrApresentacaoHotel::excluir(Gerente* gerenteLogado) {
+    std::cout << "\n--- EXCLUIR HOTEL ---\n";
+    std::string codigoHotel;
+    std::string confirmacao;
+
+    listarHoteis(); // Mostra os hotéis disponíveis
+
+    std::cout << "\nInforme o Código do Hotel a ser excluído (ou 0 para cancelar): ";
+    std::getline(std::cin >> std::ws, codigoHotel);
+
+    if (codigoHotel == "0") {
+        std::cout << "Exclusão cancelada.\n";
+        return;
+    }
+
+    Hotel* hotelExistente = this->servicoHotel->buscarHotel(codigoHotel);
+    if (!hotelExistente) {
+        std::cerr << "Erro: Hotel com código " << codigoHotel << " não encontrado.\n";
+        return;
+    }
+    
+    std::cout << "Tem certeza que deseja excluir o hotel '" << hotelExistente->getNome().getValor() << "' (" << codigoHotel << ")? (s/n): ";
+    std::cin >> confirmacao;
+
+    if (confirmacao == "s" || confirmacao == "S") {
+        if (this->servicoHotel->excluirHotel(codigoHotel)) {
+            std::cout << "\nHotel excluído com sucesso!\n";
+        } else {
+            std::cerr << "Erro ao excluir hotel.\n";
+        }
+    } else {
+        std::cout << "Exclusão cancelada.\n";
+    }
+}
 
 
 // Quartos
@@ -351,8 +549,138 @@ void CntrApresentacaoQuarto::listarQuartos() {
 }
 
 // Stubs
-void CntrApresentacaoQuarto::editarQuarto() { std::cout << "[Em desenvolvimento...]\n"; }
-void CntrApresentacaoQuarto::excluirQuarto() { std::cout << "[Em desenvolvimento...]\n"; }
+void CntrApresentacaoQuarto::editarQuarto() {
+    std::cout << "\n--- EDITAR QUARTO ---\n";
+    std::string codigoHotel, numeroQuartoStr;
+    std::string entrada;
+
+    listarQuartos(); // Mostra os quartos disponíveis
+
+    std::cout << "\nInforme o Código do Hotel ao qual o quarto pertence (ou 0 para cancelar): ";
+    std::getline(std::cin >> std::ws, codigoHotel);
+
+    if (codigoHotel == "0") {
+        std::cout << "Edição cancelada.\n";
+        return;
+    }
+
+    std::cout << "Informe o Número do Quarto a ser editado (ou 0 para cancelar): ";
+    std::getline(std::cin, numeroQuartoStr);
+
+    if (numeroQuartoStr == "0") {
+        std::cout << "Edição cancelada.\n";
+        return;
+    }
+
+    // Para editar, precisamos buscar o quarto existente. No momento, não há um buscarQuarto(codigoHotel, numeroQuarto)
+    // na interface de serviço. Vamos listar todos e buscar localmente para obter um objeto Quarto completo.
+    std::vector<Quarto> todosQuartos = this->servicoQuarto->listarQuartos();
+    Quarto* quartoExistente = nullptr;
+
+    for (auto& q : todosQuartos) {
+        if (q.getHotel()->getCodigo().getValor() == codigoHotel &&
+            q.getNumero().getValor() == numeroQuartoStr) {
+            quartoExistente = &q;
+            break;
+        }
+    }
+
+    if (!quartoExistente) {
+        std::cerr << "Erro: Quarto com número " << numeroQuartoStr << " no hotel " << codigoHotel << " não encontrado.\n";
+        return;
+    }
+
+    // Copia os dados existentes para o objeto de edição
+    Numero novoNumero = quartoExistente->getNumero(); // Número é chave, não editável
+    Capacidade novaCapacidade = quartoExistente->getCapacidade();
+    Dinheiro novaDiaria = quartoExistente->getDiaria();
+    Ramal novoRamal = quartoExistente->getRamal();
+
+    // Edita Capacidade
+    while (true) {
+        try {
+            std::cout << "Nova Capacidade (atual: " << novaCapacidade.getValor() << ", Enter para manter): ";
+            std::getline(std::cin, entrada);
+            if (entrada.empty()) break;
+            novaCapacidade.setValor(converterStringParaInt(entrada));
+            break;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Erro: " << e.what() << "\n";
+        }
+    }
+
+    // Edita Diária
+    while (true) {
+        try {
+            std::cout << "Nova Diária (atual: " << (static_cast<double>(novaDiaria.getValor()) / 100.0) << ", Ex.: 152.99, Enter para manter): ";
+            std::getline(std::cin, entrada);
+            if (entrada.empty()) break;
+            novaDiaria.setValor(converterMoedaParaCentavos(entrada));
+            break;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Erro: " << e.what() << "\n";
+        }
+    }
+
+    // Edita Ramal
+    while (true) {
+        try {
+            std::cout << "Novo Ramal (atual: " << novoRamal.getValor() << ", Enter para manter): ";
+            std::getline(std::cin, entrada);
+            if (entrada.empty()) break;
+            novoRamal.setValor(entrada);
+            break;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Erro: " << e.what() << "\n";
+        }
+    }
+    
+    // Cria um novo objeto Quarto com os dados atualizados (mantendo a referência ao hotel original)
+    Quarto quartoAtualizado(novoNumero, novaCapacidade, novaDiaria, novoRamal, quartoExistente->getHotel());
+
+    if (this->servicoQuarto->editarQuarto(quartoAtualizado)) {
+        std::cout << "\nQuarto atualizado com sucesso!\n";
+    } else {
+        std::cerr << "Erro ao atualizar quarto.\n";
+    }
+}
+
+void CntrApresentacaoQuarto::excluirQuarto() {
+    std::cout << "\n--- EXCLUIR QUARTO ---\n";
+    std::string codigoHotel, numeroQuartoStr;
+    std::string confirmacao;
+
+    listarQuartos(); // Mostra os quartos disponíveis
+
+    std::cout << "\nInforme o Código do Hotel ao qual o quarto pertence (ou 0 para cancelar): ";
+    std::getline(std::cin >> std::ws, codigoHotel);
+
+    if (codigoHotel == "0") {
+        std::cout << "Exclusão cancelada.\n";
+        return;
+    }
+
+    std::cout << "Informe o Número do Quarto a ser excluído (ou 0 para cancelar): ";
+    std::getline(std::cin, numeroQuartoStr);
+
+    if (numeroQuartoStr == "0") {
+        std::cout << "Exclusão cancelada.\n";
+        return;
+    }
+
+    std::cout << "Tem certeza que deseja excluir o quarto " << numeroQuartoStr << " do hotel " << codigoHotel << "? (s/n): ";
+    std::cin >> confirmacao;
+
+    if (confirmacao == "s" || confirmacao == "S") {
+        if (this->servicoQuarto->excluirQuarto(codigoHotel, numeroQuartoStr)) {
+            std::cout << "\nQuarto excluído com sucesso!\n";
+        } else {
+            std::cerr << "Erro ao excluir quarto.\n";
+        }
+    } else {
+        std::cout << "Exclusão cancelada.\n";
+    }
+}
 
 
 // Hóspedes
@@ -435,8 +763,114 @@ void CntrApresentacaoHospede::listarHospedes() {
 }
 
 // Stubs
-void CntrApresentacaoHospede::editarHospedde() { std::cout << "[Em desenvolvimento...]\n"; }
-void CntrApresentacaoHospede::excluirHospede() { std::cout << "[Em desenvolvimento...]\n"; }
+void CntrApresentacaoHospede::editarHospedde() {
+    std::cout << "\n--- EDITAR HÓSPEDE ---\n";
+    std::string emailHospede;
+    std::string entrada;
+
+    listarHospedes(); // Mostra os hóspedes disponíveis
+
+    std::cout << "\nInforme o Email do Hóspede a ser editado (ou 0 para cancelar): ";
+    std::getline(std::cin >> std::ws, emailHospede);
+
+    if (emailHospede == "0") {
+        std::cout << "Edição cancelada.\n";
+        return;
+    }
+
+    Hospede* hospedeExistente = this->servicoHospede->buscarHospede(emailHospede);
+    if (!hospedeExistente) {
+        std::cerr << "Erro: Hóspede com email " << emailHospede << " não encontrado.\n";
+        return;
+    }
+
+    Nome novoNome = hospedeExistente->getNome();
+    Email novoEmail = hospedeExistente->getEmail(); // Email é chave primária, não editável
+    Endereco novoEndereco = hospedeExistente->getEndereco();
+    Cartao novoCartao = hospedeExistente->getCartao();
+
+    // Edita Nome
+    while (true) {
+        try {
+            std::cout << "Novo Nome (atual: " << hospedeExistente->getNome().getValor() << ", Enter para manter): ";
+            std::getline(std::cin, entrada);
+            if (entrada.empty()) break;
+            novoNome.setValor(entrada);
+            break;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Erro: " << e.what() << "\n";
+        }
+    }
+
+    // Edita Endereço
+    while (true) {
+        try {
+            std::cout << "Novo Endereço (atual: " << hospedeExistente->getEndereco().getValor() << ", Enter para manter): ";
+            std::getline(std::cin, entrada);
+            if (entrada.empty()) break;
+            novoEndereco.setValor(entrada);
+            break;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Erro: " << e.what() << "\n";
+        }
+    }
+
+    // Edita Cartão
+    while (true) {
+        try {
+            std::cout << "Novo Cartão (atual: " << hospedeExistente->getCartao().getValor() << ", Enter para manter): ";
+            std::getline(std::cin, entrada);
+            if (entrada.empty()) break;
+            novoCartao.setValor(entrada);
+            break;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Erro: " << e.what() << "\n";
+        }
+    }
+
+    Hospede hospedeAtualizado(novoNome, novoEmail, novoEndereco, novoCartao);
+
+    if (this->servicoHospede->editarHospede(hospedeAtualizado)) {
+        std::cout << "\nHóspede atualizado com sucesso!\n";
+    } else {
+        std::cerr << "Erro ao atualizar hóspede.\n";
+    }
+}
+
+void CntrApresentacaoHospede::excluirHospede() {
+    std::cout << "\n--- EXCLUIR HÓSPEDE ---\n";
+    std::string emailHospede;
+    std::string confirmacao;
+
+    listarHospedes(); // Mostra os hóspedes disponíveis
+
+    std::cout << "\nInforme o Email do Hóspede a ser excluído (ou 0 para cancelar): ";
+    std::getline(std::cin >> std::ws, emailHospede);
+
+    if (emailHospede == "0") {
+        std::cout << "Exclusão cancelada.\n";
+        return;
+    }
+
+    Hospede* hospedeExistente = this->servicoHospede->buscarHospede(emailHospede);
+    if (!hospedeExistente) {
+        std::cerr << "Erro: Hóspede com email " << emailHospede << " não encontrado.\n";
+        return;
+    }
+    
+    std::cout << "Tem certeza que deseja excluir o hóspede '" << hospedeExistente->getNome().getValor() << "' (" << emailHospede << ")? (s/n): ";
+    std::cin >> confirmacao;
+
+    if (confirmacao == "s" || confirmacao == "S") {
+        if (this->servicoHospede->excluirHospede(emailHospede)) {
+            std::cout << "\nHóspede excluído com sucesso!\n";
+        } else {
+            std::cerr << "Erro ao excluir hóspede.\n";
+        }
+    } else {
+        std::cout << "Exclusão cancelada.\n";
+    }
+}
 
 
 // Reserva
@@ -614,5 +1048,157 @@ void CntrApresentacaoReserva::listarReservas() {
 }
 
 // Stubs
-void CntrApresentacaoReserva::editarReserva() { std::cout << "[Em desenvolvimento...]\n"; }
-void CntrApresentacaoReserva::excluirReserva() { std::cout << "[Em desenvolvimento...]\n"; }
+void CntrApresentacaoReserva::editarReserva() {
+    std::cout << "\n--- EDITAR RESERVA ---\n";
+    std::string codigoReserva;
+    std::string entrada;
+
+    listarReservas(); // Mostra as reservas disponíveis
+
+    std::cout << "\nInforme o Código da Reserva a ser editada (ou 0 para cancelar): ";
+    std::getline(std::cin >> std::ws, codigoReserva);
+
+    if (codigoReserva == "0") {
+        std::cout << "Edição cancelada.\n";
+        return;
+    }
+
+    // Para editar, precisamos buscar a reserva existente. Não há buscarReserva na interface de serviço.
+    // Vamos listar todas e buscar localmente para obter um objeto Reserva completo.
+    std::vector<Reserva> todasReservas = this->servicoReserva->listarReservas();
+    Reserva* reservaExistente = nullptr;
+
+    for (auto& r : todasReservas) {
+        if (r.getCodigo().getValor() == codigoReserva) {
+            reservaExistente = &r;
+            break;
+        }
+    }
+
+    if (!reservaExistente) {
+        std::cerr << "Erro: Reserva com código " << codigoReserva << " não encontrada.\n";
+        return;
+    }
+
+    // Copia os dados existentes para o objeto de edição
+    Data novaDataChegada = reservaExistente->getDataChegada();
+    Data novaDataPartida = reservaExistente->getDataPartida();
+    Dinheiro novoValor = reservaExistente->getValor(); // Recalculado, não editável diretamente
+    Codigo codigoOriginal = reservaExistente->getCodigo(); // Código é chave, não editável
+
+    // Edita Data Chegada
+    while (true) {
+        try {
+            std::cout << "Nova Data de Chegada (atual: " << reservaExistente->getDataChegada().getValor() << ", DD-MMM-AAAA, Enter para manter): ";
+            std::getline(std::cin, entrada);
+            if (entrada.empty()) break;
+            novaDataChegada.setValor(entrada);
+            break;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Erro: " << e.what() << "\n";
+        }
+    }
+
+    // Edita Data Partida
+    while (true) {
+        try {
+            std::cout << "Nova Data de Partida (atual: " << reservaExistente->getDataPartida().getValor() << ", DD-MMM-AAAA, Enter para manter): ";
+            std::getline(std::cin, entrada);
+            if (entrada.empty()) break;
+            novaDataPartida.setValor(entrada);
+            break;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Erro: " << e.what() << "\n";
+        }
+    }
+    
+    // Recalcula o valor da reserva (simplificado, poderia ser mais complexo)
+    long absChegada = calcularDiasAbsolutos(novaDataChegada.getValor());
+    long absPartida = calcularDiasAbsolutos(novaDataPartida.getValor());
+    long diasDif = absPartida - absChegada;
+
+    if (diasDif <= 0) {
+        std::cerr << "Erro: Data de partida deve ser posterior a data de chegada.\n";
+        return;
+    }
+
+    // Buscar o quarto associado para pegar a diária
+    Quarto* quartoAssociado = reservaExistente->getQuarto();
+    if (!quartoAssociado) {
+        std::cerr << "Erro: Quarto associado à reserva não encontrado.\n";
+        return;
+    }
+    int diariaCentavos = quartoAssociado->getDiaria().getValor();
+    long totalCentavosLong = diariaCentavos * diasDif;
+
+    if (totalCentavosLong > 100000000) { 
+        std::cerr << "Erro: Valor total excede o limite permitido pelo sistema.\n";
+        return;
+    }
+
+    Dinheiro valorTotal;
+    try {
+        valorTotal.setValor((int)totalCentavosLong);
+    } catch (std::exception& e) {
+        std::cerr << "Erro interno valor: " << e.what() << "\n";
+        return;
+    }
+
+
+    Reserva reservaAtualizada(novaDataChegada, novaDataPartida, valorTotal, codigoOriginal);
+    reservaAtualizada.setHospede(reservaExistente->getHospede()); // Mantém hóspede e quarto originais
+    reservaAtualizada.setQuarto(reservaExistente->getQuarto());
+
+
+    if (this->servicoReserva->editarReserva(reservaAtualizada)) {
+        std::cout << "\nReserva atualizada com sucesso!\n";
+    } else {
+        std::cerr << "Erro ao atualizar reserva.\n";
+    }
+}
+
+void CntrApresentacaoReserva::excluirReserva() {
+    std::cout << "\n--- EXCLUIR RESERVA ---\n";
+    std::string codigoReserva;
+    std::string confirmacao;
+
+    listarReservas(); // Mostra as reservas disponíveis
+
+    std::cout << "\nInforme o Código da Reserva a ser excluída (ou 0 para cancelar): ";
+    std::getline(std::cin >> std::ws, codigoReserva);
+
+    if (codigoReserva == "0") {
+        std::cout << "Exclusão cancelada.\n";
+        return;
+    }
+
+    // Para excluir, precisamos buscar a reserva existente. Não há buscarReserva na interface de serviço.
+    // Vamos listar todas e buscar localmente para obter um objeto Reserva completo.
+    std::vector<Reserva> todasReservas = this->servicoReserva->listarReservas();
+    Reserva* reservaExistente = nullptr;
+
+    for (auto& r : todasReservas) {
+        if (r.getCodigo().getValor() == codigoReserva) {
+            reservaExistente = &r;
+            break;
+        }
+    }
+
+    if (!reservaExistente) {
+        std::cerr << "Erro: Reserva com código " << codigoReserva << " não encontrada.\n";
+        return;
+    }
+    
+    std::cout << "Tem certeza que deseja excluir a reserva '" << codigoReserva << "' do hóspede '" << reservaExistente->getHospede()->getNome().getValor() << "'? (s/n): ";
+    std::cin >> confirmacao;
+
+    if (confirmacao == "s" || confirmacao == "S") {
+        if (this->servicoReserva->excluirReserva(codigoReserva)) {
+            std::cout << "\nReserva excluída com sucesso!\n";
+        } else {
+            std::cerr << "Erro ao excluir reserva.\n";
+        }
+    } else {
+        std::cout << "Exclusão cancelada.\n";
+    }
+}
