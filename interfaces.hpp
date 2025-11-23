@@ -17,6 +17,9 @@ public:
     // Exclui um gerente pelo email. Retorna true se sucesso, false se o gerente não for encontrado.
     virtual bool excluirGerente(const std::string& email) = 0;
 
+    virtual bool carregar() = 0; // Added for persistence
+    virtual bool salvar() = 0;   // Added for persistence
+
     // Destrutor virtual
     virtual ~IServicoGerente() {}
 };
@@ -36,6 +39,9 @@ public:
     // Exclui um hotel pelo código. Retorna true se sucesso, false se o hotel não for encontrado.
     virtual bool excluirHotel(const std::string& codigo) = 0;
 
+    virtual bool carregar() = 0; // Added for persistence
+    virtual bool salvar() = 0;   // Added for persistence
+
     //Destrutor virtual
     virtual ~IServicoHotel() {}
 };
@@ -53,6 +59,9 @@ public:
 
     // Exclui um quarto pelo código do hotel e número do quarto. Retorna true se sucesso, false se o quarto não for encontrado.
     virtual bool excluirQuarto(const std::string& codigoHotel, const std::string& numeroQuarto) = 0;
+
+    virtual bool carregar() = 0; // Added for persistence
+    virtual bool salvar() = 0;   // Added for persistence
 
     //Destrutor virtual
     virtual ~IServicoQuarto() {}
@@ -75,6 +84,9 @@ public:
     // Exclui um hóspede pelo email. Retorna true se sucesso, false se o hóspede não for encontrado.
     virtual bool excluirHospede(const std::string& email) = 0;
 
+    virtual bool carregar() = 0; // Added for persistence
+    virtual bool salvar() = 0;   // Added for persistence
+
     //Destruidor virtual
     virtual ~IServicoHospede() {}
 };
@@ -92,6 +104,9 @@ public:
 
     // Exclui uma reserva pelo código. Retorna true se sucesso, false se a reserva não for encontrada.
     virtual bool excluirReserva(const std::string& codigo) = 0;
+
+    virtual bool carregar() = 0; // Added for persistence
+    virtual bool salvar() = 0;   // Added for persistence
 
     //Destruidor virtual
     virtual ~IServicoReserva() {}

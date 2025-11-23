@@ -20,6 +20,7 @@ protected:
 public:
     Pessoa() = default;
     Pessoa(const Nome& nome, const Email& email);
+    Pessoa(const std::string& nomeStr, const std::string& emailStr); // Added for deserialization
     virtual ~Pessoa() = default;
 
     Nome getNome() const { return nome; }
@@ -38,6 +39,8 @@ private:
 public:
     Gerente() = default;
     Gerente(const Nome& nome, const Email& email, const Senha& senha, const Ramal& ramal);
+    // Added for deserialization
+    Gerente(const std::string& nomeStr, const std::string& emailStr, const std::string& senhaStr, const std::string& ramalStr);
 
     Senha getSenha() const { return senha; }
     Ramal getRamal() const { return ramal; }
@@ -58,6 +61,8 @@ private:
 public:
     Hotel() = default;
     Hotel(const Nome& nome, const Endereco& endereco, const Telefone& telefone, const Codigo& codigo);
+    // Added for deserialization (gerente will be set separately if needed)
+    Hotel(const std::string& nomeStr, const std::string& enderecoStr, const std::string& telefoneStr, const std::string& codigoStr);
     virtual ~Hotel() = default;
 
     void setNome(const Nome& nome) { this->nome = nome; }
@@ -88,6 +93,9 @@ public:
     Quarto() : hotel(nullptr), reserva(nullptr) {}
     Quarto(const Numero& numero, const Capacidade& capacidade, 
            const Dinheiro& diaria, const Ramal& ramal, Hotel* hotel);
+    // Added for deserialization (hotel and reserva will be set separately if needed)
+    Quarto(const std::string& numeroStr, const std::string& capacidadeStr, 
+           const std::string& diariaStr, const std::string& ramalStr);
     virtual ~Quarto() = default;
 
     void setNumero(const Numero& numero) { this->numero = numero; }
@@ -117,6 +125,8 @@ private:
 public:
     Hospede() : reserva(nullptr) {}
     Hospede(const Nome& nome, const Email& email, const Endereco& endereco, const Cartao& cartao);
+    // Added for deserialization (reserva will be set separately if needed)
+    Hospede(const std::string& nomeStr, const std::string& emailStr, const std::string& enderecoStr, const std::string& cartaoStr);
     virtual ~Hospede() = default;
 
     void setEndereco(const Endereco& endereco) { this->endereco = endereco; }
@@ -145,6 +155,9 @@ public:
     Reserva() : hospede(nullptr), quarto(nullptr) {}
     Reserva(const Data& dataChegada, const Data& dataPartida, 
             const Dinheiro& valor, const Codigo& codigo);
+    // Added for deserialization (hospede and quarto will be set separately if needed)
+    Reserva(const std::string& dataChegadaStr, const std::string& dataPartidaStr, 
+            const std::string& valorStr, const std::string& codigoStr);
     virtual ~Reserva() = default;
 
     void setDataChegada(const Data& dataChegada) { this->dataChegada = dataChegada; }

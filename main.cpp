@@ -12,14 +12,14 @@ int main() {
 
     // 1. INSTANCIAR A CAMADA DE SERVIÇO (BANCO DE DADOS EM MEMÓRIA)
     // Instanciar ContainerReserva primeiro, pois é uma dependência
-    ContainerReserva containerReserva;
+    ContainerReserva containerReserva("reservas.txt");
     // Instanciar ContainerQuarto e ContainerHospede, passando containerReserva
-    ContainerQuarto containerQuarto(&containerReserva);
-    ContainerHospede containerHospede(&containerReserva);
+    ContainerQuarto containerQuarto("quartos.txt", &containerReserva);
+    ContainerHospede containerHospede("hospedes.txt", &containerReserva);
     // Instanciar ContainerHotel, passando containerQuarto e containerReserva
-    ContainerHotel containerHotel(&containerQuarto, &containerReserva);
+    ContainerHotel containerHotel("hoteis.txt", &containerQuarto, &containerReserva);
     // ContainerGerente não tem dependências de outros serviços
-    ContainerGerente containerGerente;
+    ContainerGerente containerGerente("gerentes.txt");
 
     // Instaciações das classes de apresentação
     CntrApresentacaoGerente cntrGerente;
@@ -148,6 +148,13 @@ int main() {
             }
         }
     }
+
+    // Call salvar() for each container at application shutdown
+    containerGerente.salvar();
+    containerHotel.salvar();
+    containerQuarto.salvar();
+    containerHospede.salvar();
+    containerReserva.salvar();
 
     return 0;
 }
