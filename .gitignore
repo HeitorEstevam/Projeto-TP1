@@ -1,0 +1,8 @@
+# Executables
+*.exe
+
+# Doxygen documentation
+html/
+
+# VSCode launch config (optional, but good practice for local dev)
+.vscode/launch.json
