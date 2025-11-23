@@ -11,6 +11,12 @@ public:
     virtual bool criarGerente(const Gerente& gerente) = 0;
     virtual Gerente* autenticar(const std::string& email, const std::string& senha) = 0;
 
+    // Edita os dados de um gerente. Retorna true se sucesso, false se o gerente não for encontrado ou se o novo email já estiver em uso.
+    virtual bool editarGerente(const Gerente& gerente) = 0;
+
+    // Exclui um gerente pelo email. Retorna true se sucesso, false se o gerente não for encontrado.
+    virtual bool excluirGerente(const std::string& email) = 0;
+
     // Destrutor virtual
     virtual ~IServicoGerente() {}
 };
@@ -23,7 +29,14 @@ public:
 
     // Retorna a lista completa
     virtual std::vector<Hotel> listarHoteis() = 0;
-    //Destruidor virtual
+
+    // Edita os dados de um hotel. Retorna true se sucesso, false se o hotel não for encontrado ou se o novo código já estiver em uso.
+    virtual bool editarHotel(const Hotel& hotel) = 0;
+
+    // Exclui um hotel pelo código. Retorna true se sucesso, false se o hotel não for encontrado.
+    virtual bool excluirHotel(const std::string& codigo) = 0;
+
+    //Destrutor virtual
     virtual ~IServicoHotel() {}
 };
 
@@ -34,7 +47,14 @@ public:
 
     // Retorna a lista de todos os quartos
     virtual std::vector<Quarto> listarQuartos() = 0;
-    //Destruidor virtual
+
+    // Edita os dados de um quarto. Retorna true se sucesso, false se o quarto não for encontrado ou se o novo número já estiver em uso no mesmo hotel.
+    virtual bool editarQuarto(const Quarto& quarto) = 0;
+
+    // Exclui um quarto pelo código do hotel e número do quarto. Retorna true se sucesso, false se o quarto não for encontrado.
+    virtual bool excluirQuarto(const std::string& codigoHotel, const std::string& numeroQuarto) = 0;
+
+    //Destrutor virtual
     virtual ~IServicoQuarto() {}
 };
 
@@ -48,7 +68,14 @@ public:
 
     // Lista todos os hóspedes
     virtual std::vector<Hospede> listarHospedes() = 0;
-    //Destruidor padrão
+
+    // Edita os dados de um hóspede. Retorna true se sucesso, false se o hóspede não for encontrado ou se o novo email já estiver em uso.
+    virtual bool editarHospede(const Hospede& hospede) = 0;
+
+    // Exclui um hóspede pelo email. Retorna true se sucesso, false se o hóspede não for encontrado.
+    virtual bool excluirHospede(const std::string& email) = 0;
+
+    //Destruidor virtual
     virtual ~IServicoHospede() {}
 };
 
@@ -59,7 +86,14 @@ public:
 
     // Lista todas as reservas
     virtual std::vector<Reserva> listarReservas() = 0;
-    //Destruidor padrão
+
+    // Edita os dados de uma reserva. Retorna true se sucesso, false se a reserva não for encontrada.
+    virtual bool editarReserva(const Reserva& reserva) = 0;
+
+    // Exclui uma reserva pelo código. Retorna true se sucesso, false se a reserva não for encontrada.
+    virtual bool excluirReserva(const std::string& codigo) = 0;
+
+    //Destruidor virtual
     virtual ~IServicoReserva() {}
 };
 
