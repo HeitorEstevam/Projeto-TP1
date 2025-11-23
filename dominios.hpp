@@ -7,260 +7,347 @@
 #include <iostream>
 
 //Declaração de classe para evitar erro de compilação
+class Hotel;
 class Quarto;
 class Reserva;
 class Hospede;
 
+
+// CLASSES DE DOMÍNIO (Tipos Básicos)
+
+// Domínio: Nome
+class Nome {
+private:
+    std::string valor;
+    // Método auxiliar de validação (interno)
+    void validar(std::string v);
+public:
+    void setValor(std::string v);
+    std::string getValor() const { return valor; }
+};
+
+// Domínio: Email
+class Email {
+private:
+    std::string valor;
+    void validar(std::string v);
+public:
+    void setValor(std::string v);
+    std::string getValor() const { return valor; }
+};
+
+// Domínio: Senha
+class Senha {
+private:
+    std::string valor;
+    void validar(std::string v);
+public:
+    void setValor(std::string v);
+    std::string getValor() const { return valor; }
+};
+
+//Domínio Endereco
+class Endereco {
+private:
+    std::string valor;
+    void validar(std::string v); // Implementar regra: 5-30 chars, sem pontos consecutivos
+public:
+    void setValor(std::string v);
+    std::string getValor() const { return valor; }
+};
+
+//Domínio telefone
+class Telefone {
+private:
+    std::string valor;
+    void validar(std::string v);
+public:
+    void setValor(std::string v);
+    std::string getValor() const { return valor; }
+};
+
+//Domínio Código
+class Codigo {
+private:
+    std::string valor;
+    void validar(std::string v);
+public:
+    void setValor(std::string v);
+    std::string getValor() const { return valor; }
+};
+
+//Domínio Email
+class Email {
+private:
+    std::string valor;
+    void validar(std::string v);
+public:
+    void setValor(std::string v);
+    std::string getValor() const { return valor; }
+};
+
+//Domínio Senha
+class Senha {
+private:
+    std::string valor;
+    void validar(std::string v);
+public:
+    void setValor(std::string v);
+    std::string getValor() const { return valor; }
+};
+
+//Domínio Ramal
+class Ramal {
+private:
+    std::string valor; 
+    void validar(std::string v);
+public:
+    void setValor(std::string v);
+    std::string getValor() const { return valor; }
+};
+
+//Domínio Numero
+class Numero {
+private:
+    std::string valor;
+    void validar(std::string v);
+public:
+    void setValor(std::string v);
+    std::string getValor() const { return valor; }
+};
+
+//Dominio Capacidade
+class Capacidade {
+private:
+    int valor;
+    void validar(int v);
+public:
+    void setValor(int v);
+    int getValor() const { return valor; }
+};
+
+//Domínio Dinheiro
+class Dinheiro {
+private:
+    int valor;
+    void validar(int v);
+public:
+    void setValor(int v);
+    int getValor() const { return valor; }
+};
+
+//Domínio Cartão
+class Cartao {
+private:
+    std::string valor;
+    void validar(std::string v);
+public:
+    void setValor(std::string v);
+    std::string getValor() const { return valor; }
+};
+
+//Domínio Data
+class Data {
+private:
+    std::string valor;
+    void validar(std::string v);
+public:
+    void setValor(std::string v);
+    std::string getValor() const { return valor; }
+};
+
+
+// CLASSES ENTIDADE (Objetos do Sistema)
+
 // Classe Pessoa
 class Pessoa {
 protected:
-    std::string nome;
-    std::string email;
+    Nome nome;
+    Email email;
 
 public:
-    //Métodos contrutores
+    // Construtores
     Pessoa() = default;
-    Pessoa(const std::string& nome, const std::string& email);
+    Pessoa(const Nome& nome, const Email& email);
+
+    // Destrutor virtual
+    virtual ~Pessoa() = default;
 
     // Getters
-    std::string getNome() const { return nome; };
-    std::string getEmail() const { return email; };
+    Nome getNome() const { return nome; }
+    Email getEmail() const { return email; }
 
-    // Setters com validação
-    void setNome(const std::string& nome) { this->nome = nome; };
-    void setEmail(const std::string& email) { this->email = email; };
-
-    // Validações
-    bool validarNome(const std::string& nome) const;
-    bool validarEmail(const std::string& email) const;
+    // Setters
+    void setNome(const Nome& nome) { this->nome = nome; }
+    void setEmail(const Email& email) { this->email = email; }
 };
-
 
 // Classe Gerente (herda de Pessoa)
 class Gerente : public Pessoa {
 private:
-    std::string senha;
-    int ramal;
-
-    //Declaração de vetor para guardar hoteis
-    std::vector<Hotel> hoteis;
-    std::vector<Hospede> hospedes;
+    Senha senha;
+    Ramal ramal;
 
 public:
-    //Métodos contrutores
+    // Construtores
     Gerente() = default;
-    Gerente(const std::string& nome, const std::string& email, const std::string& senha, int ramal);
+    Gerente(const Nome& nome, const Email& email, const Senha& senha, const Ramal& ramal);
 
-    // Getters e setters
-    std::string getSenha() const { return senha; };
-    int getRamal() const { return ramal; };
-    void setSenha(const std::string& senha) { this->senha = senha; };
-    void setRamal(int ramal) { this->ramal = ramal; };
+    // Getters
+    Senha getSenha() const { return senha; }
+    Ramal getRamal() const { return ramal; }
 
-    // Validação
-    bool validarSenha(const std::string& senha) const;
-    bool validarRamal(int ramal) const;
-
-    // Ações do gerente
-    void criarHotel();
-    void editarHotel();
-    void excluirHotel();
-    void listarHoteis();
-
-    void criarQuarto();
-    void editarQuarto();
-    void excluirQuarto();
-    void listarQuartos();
-
-    void criarHospede();
-    void editarHospede();
-    void excluirHospede();
-    void listarHospedes();
-
-    void criarReserva();
-    void editarReserva();
-    void excluirReserva();
-    void listarReservas();
-
-    void lerConta();
-    void editarConta();
-    void excluirConta();
-
-    //Ações complementares
-    Hotel* buscarHotelPorCodigo(const std::string& codigo);
-    Quarto* buscarQuartoPorCodigo(const std::string& codigo) const;
-    Reserva* buscarReservaPorCodigo(const std::string& codigo) const;
-    std::vector<Hospede>& getHospedes();
+    // Setters
+    void setSenha(const Senha& senha) { this->senha = senha; }
+    void setRamal(const Ramal& ramal) { this->ramal = ramal; }
 };
 
-
-// Classe Hotel
+//Classe Hotel
 class Hotel {
 private:
-    std::string nome;
-    std::string endereco;
-    std::string telefone;
-    std::string codigo;
+    Nome nome;
+    Endereco endereco;
+    Telefone telefone;
+    Codigo codigo;
 
-    //Associação obrigatória
-    Gerente* gerente;
-
-    //Composição (um hotel tem quartos)
-    std::vector<Quarto> quartos;
-
+    //Ponteiro para identificar o gerente do Hotel
+    Gerente* gerente; 
 public:
-    //Métodos contrutores
+    // Construtores
     Hotel() = default;
-    Hotel(const std::string& nome, const std::string& endereco, const std::string& telefone, const std::string& codigo, Gerente* gerente);
+    Hotel(const Nome& nome, const Endereco& endereco, const Telefone& telefone, const Codigo& codigo);
 
-    // Getters e setters
-    std::string getNome() const { return nome; };
-    std::string getEndereco() const { return endereco; };
-    std::string getTelefone() const { return telefone; };
-    std::string getCodigo() const { return codigo; };
-    Gerente& getgerente() const { return *gerente; };
+    // Destrutor
+    virtual ~Hotel() = default;
 
-    void setNome(const std::string& nome);
-    void setEndereco(const std::string& endereco);
-    void setTelefone(const std::string& telefone);
-    void setCodigo(const std::string& codigo);
+    // Setters
+    void setNome(const Nome& nome) { this->nome = nome; }
+    void setEndereco(const Endereco& endereco) { this->endereco = endereco; }
+    void setTelefone(const Telefone& telefone) { this->telefone = telefone; }
+    void setCodigo(const Codigo& codigo) { this->codigo = codigo; }
+    void setGerente(Gerente* gerente) { this->gerente = gerente; }
 
-    // Validações
-    bool validarNome(const std::string& nome) const;
-    bool validarEndereco(const std::string& endereco) const;
-    bool validarTelefone(const std::string& telefone) const;
-    bool validarCodigo(const std::string& codigo) const;
-
-    // Método usado pelo gerente para associar um quarto ao hotel
-    void adicionarQuarto(const Quarto& quarto) {
-        quartos.push_back(quarto);
-    }
-
-    //Métodos complementares
-    std::vector<Quarto>& getQuartos();
-    void listarQuartos() const;
+    // Getters
+    Nome getNome() const { return nome; }
+    Endereco getEndereco() const { return endereco; }
+    Telefone getTelefone() const { return telefone; }
+    Codigo getCodigo() const { return codigo; }
+    Gerente* getGerente() const { return gerente; }
 };
-
 
 // Classe Quarto
 class Quarto {
 private:
-    std::string numero;
-    int capacidade;
-    int diaria;
-    std::string ramal;
+    Numero numero;
+    Capacidade capacidade;
+    Dinheiro diaria;
+    Ramal ramal;
 
-    //Associações dos quartos (obrigatória e opcional)
+    // Associações
     Hotel* hotel;
     Reserva* reserva;
 
 public:
-    //Métodos contrutores
+    // Construtores
     Quarto() : hotel(nullptr), reserva(nullptr) {}
-    Quarto(const std::string& numero, int capacidade, int diaria, const std::string& ramal, Hotel* hotel)
-    : numero(numero),
-      capacidade(capacidade),
-      diaria(diaria),
-      ramal(ramal),
-      hotel(hotel),
-      reserva(nullptr) {}
+    
+    Quarto(const Numero& numero, const Capacidade& capacidade, 
+           const Dinheiro& diaria, const Ramal& ramal, Hotel* hotel);
 
+    // Destrutor virtual
+    virtual ~Quarto() = default;
 
-    // Getters e setters
-    std::string getNumero() const { return numero; };
-    int getCapacidade() const { return capacidade; };
-    int getDiaria() const { return diaria; };
-    std::string getRamal() const { return ramal; };
+    // Setters
+    void setNumero(const Numero& numero) { this->numero = numero; }
+    void setCapacidade(const Capacidade& capacidade) { this->capacidade = capacidade; }
+    void setDiaria(const Dinheiro& diaria) { this->diaria = diaria; }
+    void setRamal(const Ramal& ramal) { this->ramal = ramal; }
+
+    // Gerenciamento de Associações
+    void setHotel(Hotel* hotel) { this->hotel = hotel; }
+    void associarReserva(Reserva* reserva) { this->reserva = reserva; }
+    void removerReserva() { this->reserva = nullptr; }
+
+    // Getters
+    Numero getNumero() const { return numero; }
+    Capacidade getCapacidade() const { return capacidade; }
+    Dinheiro getDiaria() const { return diaria; }
+    Ramal getRamal() const { return ramal; }
     Hotel* getHotel() const { return hotel; }
     Reserva* getReserva() const { return reserva; }
-
-    void setNumero(const std::string& numero) { this->numero = numero;}
-    void setCapacidade(int capacidade) { this->capacidade = capacidade; };
-    void setDiaria(int diaria) { this->diaria = diaria; };
-    void setRamal(const std::string& ramal) { this->ramal = ramal;}
-
-    // Validações
-    bool validarNumero(const std::string& numero) const;
-    bool validarCapacidade(int capacidade) const;
-    bool validarDiaria(int diaria) const;
-    bool validarRamal(const std::string& ramal) const;
-
-    //Associações com reserva
-    void associarReserva(Reserva* reserva) { this->reserva = reserva; }
-    void removerReserva(Reserva* reserva) { this->reserva = nullptr; }
 };
 
-// Classe Hospede
+// Classe Hóspede
 class Hospede : public Pessoa {
 private:
-    std::string endereco;
-    std::string cartao;
+    Endereco endereco;
+    Cartao cartao;
 
-    //Associação opcional
+    // Associação
     Reserva* reserva;
 
 public:
-    //Métodos contrutores
+    // Construtores
     Hospede() : reserva(nullptr) {}
-    Hospede(const std::string& nome, const std::string& email, const std::string& endereco, const std::string& cartao)
-        : Pessoa(nome, email), endereco(endereco), cartao(cartao), reserva(nullptr) {}
+    Hospede(const Nome& nome, const Email& email, const Endereco& endereco, const Cartao& cartao);
 
-    //Getters e setters
-    std::string getEndereco() const { return endereco; };
-    std::string getCartao() const { return cartao; };
-    Reserva* getReserva() const { return reserva; }
+    // Destrutor
+    virtual ~Hospede() = default;
 
-    void setEndereco(const std::string& endereco) { this->endereco = endereco; };
-    void setCartao(const std::string& cartao) { this->cartao = cartao; };
+    // Setters
+    void setEndereco(const Endereco& endereco) { this->endereco = endereco; }
+    void setCartao(const Cartao& cartao) { this->cartao = cartao; }
 
-    //Validações
-    bool validarEndereco(const std::string& endereco) const;
-    bool validarCartao(const std::string& cartao) const;
-
-    //Associação com reserva
+    // Gerenciamento
     void associarReserva(Reserva* reserva) { this->reserva = reserva; }
-    void removerReserva(Reserva* reserva) { this->reserva = nullptr; }
+    void removerReserva() { this->reserva = nullptr; }
+
+    // Getters
+    Endereco getEndereco() const { return endereco; }
+    Cartao getCartao() const { return cartao; }
+    Reserva* getReserva() const { return reserva; }
 };
 
-
-// Classe Reserva
+//Classe Reserva
 class Reserva {
 private:
-    std::string dataChegada;
-    std::string dataPartida;
-    int valor;
-    std::string codigo;
+    Data dataChegada;
+    Data dataPartida;
+    Dinheiro valor;
+    Codigo codigo;
 
-    //Associações obrigatórias
+    // Associações
     Hospede* hospede;
     Quarto* quarto;
 
 public:
-    //Métodos contrutores
-    Reserva() = default;
-    Reserva(const std::string& dataChegada, const std::string& dataPartida, int valor, const std::string& codigo);
+    // Construtores
+    Reserva() : hospede(nullptr), quarto(nullptr) {}
 
-    //Getters e setters
-    std::string getDataChegada() const { return dataChegada; };
-    std::string getDataPartida() const { return dataPartida; };
-    int getValor() const { return valor; };
-    std::string getCodigo() const { return codigo; };
-    Hospede* getHospede() const { return hospede; }
-    Quarto* getQuarto() const { return quarto; }
+    // Construtor principal
+    Reserva(const Data& dataChegada, const Data& dataPartida, 
+            const Dinheiro& valor, const Codigo& codigo);
 
-    void setDataChegada(const std::string& data) { this->dataChegada = data; };
-    void setDataPartida(const std::string& data) { this->dataPartida = data; };
-    void setValor(int valor) { this->valor = valor; };
-    void setCodigo(const std::string& codigo) { this->codigo = codigo; };
+    // Destrutor virtual
+    virtual ~Reserva() = default;
 
-    //Validações
-    bool validarData(const std::string& data) const;
-    bool validarValor(int valor) const;
-    bool validarCodigo(const std::string& codigo) const;
+    // Setters
+    void setDataChegada(const Data& dataChegada) { this->dataChegada = dataChegada; }
+    void setDataPartida(const Data& dataPartida) { this->dataPartida = dataPartida; }
+    void setValor(const Dinheiro& valor) { this->valor = valor; }
+    void setCodigo(const Codigo& codigo) { this->codigo = codigo; }
 
-    //Associações
+    // Gerenciamento de Associações
     void setHospede(Hospede* hospede) { this->hospede = hospede; }
     void setQuarto(Quarto* quarto) { this->quarto = quarto; }
+
+    // Getters
+    Data getDataChegada() const { return dataChegada; }
+    Data getDataPartida() const { return dataPartida; }
+    Dinheiro getValor() const { return valor; }
+    Codigo getCodigo() const { return codigo; }
+    Hospede* getHospede() const { return hospede; }
+    Quarto* getQuarto() const { return quarto; }
 };
 
 #endif
