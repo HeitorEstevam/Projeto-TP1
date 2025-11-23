@@ -106,7 +106,7 @@ void Telefone::validar(std::string v) {
     // Valida se o telefone é composto apenas por números (com exceção do primeiro elemento)
     for (size_t i = 1; i < v.size(); ++i) {
         if (!isdigit(v[i])) {
-            throw std::invalid_argument("Telefone deve conter apenas dígitos apos o '+'.");
+            throw std::invalid_argument("Telefone deve conter apenas digitos apos o '+'");
         }
     }
 }
@@ -226,7 +226,7 @@ void Cartao::validar(std::string v) {
 
     // Algoritmo de Luhn
     int soma = 0;
-    bool dobrar = false; // Começamos do último dígito (que é o verificador), então não dobramos o primeiro
+    bool dobrar = false;
 
     // Percorre a string de trás para frente
     for (int i = 15; i >= 0; --i) {
@@ -244,7 +244,7 @@ void Cartao::validar(std::string v) {
         dobrar = !dobrar; // Alterna entre dobrar e não dobrar
     }
 
-    // Se o módulo da soma por 10 NÃO for 0, o cartão é inválido
+    // Se o módulo da soma por 10 não for 0, o cartão é inválido
     if (soma % 10 != 0) {
         throw std::invalid_argument("Numero de cartao invalido (falha na verificacao Luhn).");
     }
@@ -294,7 +294,7 @@ void Data::validar(std::string v) {
     }
     //Caso do mês digitado não ser encontrato
     if (indiceMes == -1) {
-        throw std::invalid_argument("Mês inválido. Verifique a grafia (ex: JAN, FEV...).");
+        throw std::invalid_argument("Mes invalido. Verifique a grafia (ex: JAN, FEV...).");
     }
 
     // Dias por mês
@@ -395,11 +395,11 @@ void Email::validar(std::string v) {
     // Verifica formato básico e separa as partes
     size_t posArroba = v.find('@');
     if (posArroba == std::string::npos) {
-        throw std::invalid_argument("Email deve conter @.");
+        throw std::invalid_argument("Email deve conter @");
     }
     // Não pode começar ou terminar com @
     if (posArroba == 0 || posArroba == v.size() - 1) {
-        throw std::invalid_argument("Email inválido (posicao do @).");
+        throw std::invalid_argument("Email invalido (posicao do @)");
     }
 
     std::string parteLocal = v.substr(0, posArroba);
@@ -425,7 +425,7 @@ void Email::validar(std::string v) {
 
         // Verifica se tem apenas os caracteres permitidos: letra (a-z), dígito (0-9) ou ponto(.) ou hífen (-)
         if (!ehAlfanumerico && !ehPontoOuHifen) {
-            throw std::invalid_argument("Parte local contem caractere inválido.");
+            throw std::invalid_argument("Parte local contem caractere invalido.");
         }
 
         // Regra: ponto ou hífen deve ser seguido por letra(s) ou dígito(s)
@@ -456,19 +456,19 @@ void Email::validar(std::string v) {
             
             // Se parte vazia, significa pontos consecutivos (ex: a..b) ou ponto no inicio/fim original
             if (parteAtual.empty()) {
-                throw std::invalid_argument("Domínio pontos consecutivos ou mal posicionados");
+                throw std::invalid_argument("Dominio pontos consecutivos ou mal posicionados");
             }
 
             // Não pode iniciar ou terminar com hífen
             if (parteAtual.front() == '-' || parteAtual.back() == '-') {
-                throw std::invalid_argument("Parte do domínio não pode iniciar ou terminar com hifen.");
+                throw std::invalid_argument("Parte do dominio nao pode iniciar ou terminar com hifen.");
             }
 
             // Validar caracteres da parte
             for (char cp : parteAtual) {
                 // cada parte pode conter letra (a-z), dígito (0-9) ou hífen (-)
                 if (!isalnum(cp) && cp != '-') {
-                    throw std::invalid_argument("Domínio contem caractere inválido.");
+                    throw std::invalid_argument("Dominio contem caractere invalido.");
                 }
             }
 

@@ -126,16 +126,16 @@ void CntrApresentacaoGerente::criarConta() {
 
     // MUDANÇA: Usando this->servicoGerente
     if (this->servicoGerente->criarGerente(novoGerente)) {
-        std::cout << "\nConta criada com sucesso! Você já pode fazer login.\n";
+        std::cout << "\nConta criada com sucesso! Voce ja pode fazer login.\n";
     } else {
-        std::cerr << "Erro: Este e-mail já esta cadastrado no sistema.\n";
+        std::cerr << "Erro: Este e-mail ja esta cadastrado no sistema.\n";
     }
 }
 
 // Autenticação
 Gerente* CntrApresentacaoGerente::autenticar() {
     std::string email, senha;
-    std::cout << "\n--- LOGIN ---\n";
+    std::cout << "\nLOGIN\n";
     std::cout << "Email: "; std::cin >> email;
     std::cout << "Senha: "; std::cin >> senha;
     
@@ -180,7 +180,7 @@ void CntrApresentacaoHotel::criarHotel(Gerente* gerenteLogado) {
     // ENDEREÇO
     while (true) {
         try {
-            std::cout << "Endereço: ";
+            std::cout << "Endereco: ";
             std::getline(std::cin, entrada);
             endereco.setValor(entrada);
             break;
@@ -204,7 +204,7 @@ void CntrApresentacaoHotel::criarHotel(Gerente* gerenteLogado) {
     // CÓDIGO
     while (true) {
         try {
-            std::cout << "Código (10 caracteres alfanuméricos): ";
+            std::cout << "Codigo (10 caracteres alfanumericos): ";
             std::getline(std::cin, entrada);
             codigo.setValor(entrada);
             break;
@@ -224,7 +224,7 @@ void CntrApresentacaoHotel::criarHotel(Gerente* gerenteLogado) {
 
 //Listar hoteis
 void CntrApresentacaoHotel::listarHoteis() {
-    std::cout << "\n--- LISTA DE HOTEIS ---\n";
+    std::cout << "\nLISTA DE HOTEIS\n";
     std::vector<Hotel> lista = this->servicoHotel->listarHoteis();
 
     if (lista.empty()) {
@@ -251,7 +251,7 @@ void CntrApresentacaoQuarto::criarQuarto() {
     // Associar ao hotel
     Hotel* hotelPai = nullptr;
     while (true) {
-        std::cout << "Informe o código do Hotel deste quarto: ";
+        std::cout << "Informe o codigo do Hotel deste quarto: ";
         std::getline(std::cin >> std::ws, entrada);
         
         // MUDANÇA: this->servicoHotel
@@ -260,11 +260,11 @@ void CntrApresentacaoQuarto::criarQuarto() {
         
         std::cerr << "Erro: Hotel nao encontrado.\n";
 
-        std::cout << "\nHoteis Disponíveis\n";
+        std::cout << "\nHoteis Disponiveis\n";
         std::vector<Hotel> lista = this->servicoHotel->listarHoteis();
         
         if (lista.empty()) {
-            std::cout << "Nenhum hotel cadastrado. Impossível criar quarto.\n";
+            std::cout << "Nenhum hotel cadastrado. Impossivel criar quarto.\n";
             return;
         }
 
@@ -343,7 +343,7 @@ void CntrApresentacaoQuarto::criarQuarto() {
 // Listar quartos
 void CntrApresentacaoQuarto::listarQuartos() {
     std::vector<Quarto> lista = this->servicoQuarto->listarQuartos();
-    std::cout << "\n--- LISTA DE QUARTOS ---\n";
+    std::cout << "\nLISTA DE QUARTOS\n";
     for(const auto& q : lista) {
         std::cout << "Hotel: " << q.getHotel()->getNome().getValor() 
                   << " | Quarto: " << q.getNumero().getValor() << "\n";
@@ -374,7 +374,7 @@ void CntrApresentacaoHospede::criarHospede() {
             nome.setValor(entrada);
             break;
         } catch (const std::invalid_argument& e) {
-            std::cerr << "Erro: " << e.what() << "\nRegra: 5 a 20 caracteres, apenas letras/espacos, iniciais maiúsculas.\n";
+            std::cerr << "Erro: " << e.what() << "\nRegra: 5 a 20 caracteres, apenas letras/espacos, iniciais maiusculas.\n";
         }
     }
 
@@ -393,7 +393,7 @@ void CntrApresentacaoHospede::criarHospede() {
     // Endereço
     while (true) {
         try {
-            std::cout << "Endereço: ";
+            std::cout << "Endereco: ";
             std::getline(std::cin, entrada);
             endereco.setValor(entrada);
             break;
@@ -405,7 +405,7 @@ void CntrApresentacaoHospede::criarHospede() {
     // Cartão
     while (true) {
         try {
-            std::cout << "Cartão de Crédito (16 dígitos): ";
+            std::cout << "Cartao de Credito (16 digitos): ";
             std::getline(std::cin, entrada);
             cartao.setValor(entrada);
             break;
@@ -420,14 +420,14 @@ void CntrApresentacaoHospede::criarHospede() {
     if (this->servicoHospede->criarHospede(novoHospede)) {
         std::cout << "\nHospede '" << novoHospede.getNome().getValor() << "' cadastrado com sucesso!\n";
     } else {
-        std::cerr << "Erro: Hóspede já cadastrado (email duplicado).\n";
+        std::cerr << "Erro: Hospede ja cadastrado (email duplicado).\n";
     }
 }
 
 // Listar Hóspedes
 void CntrApresentacaoHospede::listarHospedes() {
     std::vector<Hospede> lista = this->servicoHospede->listarHospedes();
-    std::cout << "\n--- LISTA DE HÓSPEDES ---\n";
+    std::cout << "\nLISTA DE HOSPEDES\n";
     for(const auto& h : lista) {
         std::cout << "Email: " << h.getEmail().getValor() 
                   << " | Nome: " << h.getNome().getValor() << "\n";
@@ -449,14 +449,14 @@ void CntrApresentacaoReserva::criarReserva() {
     // Seleção do hotel
     Hotel* hotelSelecionado = nullptr;
     while (true) {
-        std::cout << "Informe o código do Hotel: ";
+        std::cout << "Informe o codigo do Hotel: ";
         std::getline(std::cin >> std::ws, entrada);
         
         // MUDANÇA: this->servicoHotel
         hotelSelecionado = this->servicoHotel->buscarHotel(entrada);
         if (hotelSelecionado) break;
 
-        std::cerr << "Hotel não encontrado. Hotéis disponíveis:\n";
+        std::cerr << "Hotel nao encontrado. Hotéis disponiveis:\n";
         std::vector<Hotel> listaH = this->servicoHotel->listarHoteis();
         if (listaH.empty()) { std::cout << "Nenhum hotel cadastrado.\n"; return; }
         
@@ -467,7 +467,7 @@ void CntrApresentacaoReserva::criarReserva() {
     // Seleção do hóspede
     Hospede* hospedeSelecionado = nullptr;
     while (true) {
-        std::cout << "Informe o e-mail do Hóspede: ";
+        std::cout << "Informe o e-mail do Hospede: ";
         std::getline(std::cin, entrada);
 
         // MUDANÇA: this->servicoHospede
@@ -513,7 +513,7 @@ void CntrApresentacaoReserva::criarReserva() {
     Quarto* quartoSelecionado = nullptr;
     
     while (true) {
-        std::cout << "Informe o número do Quarto: ";
+        std::cout << "Informe o numero do Quarto: ";
         std::getline(std::cin, entrada);
 
         // MUDANÇA: this->servicoQuarto
@@ -547,7 +547,7 @@ void CntrApresentacaoReserva::criarReserva() {
                 }
 
                 if (conflitoDetectado) {
-                    std::cerr << "ERRO: Quarto indisponível neste período.\n";
+                    std::cerr << "ERRO: Quarto indisponivel neste periodo.\n";
                 } else {
                     quartoSelecionado = new Quarto(todosQuartos[i]);
                 }
@@ -557,7 +557,7 @@ void CntrApresentacaoReserva::criarReserva() {
 
         if (quartoSelecionado) break;
         if (!quartoExisteNoHotel) {
-            std::cerr << "Quarto não encontrado neste hotel. Tente novamente.\n";
+            std::cerr << "Quarto nao encontrado neste hotel. Tente novamente.\n";
         }
     }
 
@@ -581,7 +581,7 @@ void CntrApresentacaoReserva::criarReserva() {
     Codigo codigo;
     while(true) {
         try {
-            std::cout << "Código da Reserva (10 alphanum): ";
+            std::cout << "Codigo da Reserva (10 alphanum): ";
             std::getline(std::cin, entrada);
             codigo.setValor(entrada);
             break;
@@ -598,7 +598,7 @@ void CntrApresentacaoReserva::criarReserva() {
     if (this->servicoReserva->criarReserva(novaReserva)) {
         std::cout << "\nReserva criada com sucesso!\n";
     } else {
-        std::cerr << "Erro: Código de reserva duplicado.\n";
+        std::cerr << "Erro: Codigo de reserva duplicado.\n";
     }
 }
 

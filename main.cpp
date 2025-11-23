@@ -2,33 +2,33 @@
 #include "dominios.hpp"
 #include "entidades.hpp"
 #include "interfaces.hpp"
-#include "containers.hpp"   // Camada de Serviço (Implementação)
-#include "controladoras.hpp" // Camada de Apresentação
+#include "containers.hpp"
+#include "controladoras.hpp"
 
 using namespace std;
 
 int main() {
-    // 1. INSTANCIAR A CAMADA DE SERVIÇO (BANCO DE DADOS EM MEMÓRIA)
+    // Instanciações das classes serviço
     ContainerGerente containerGerente;
     ContainerHotel containerHotel;
     ContainerQuarto containerQuarto;
     ContainerHospede containerHospede;
     ContainerReserva containerReserva;
 
-    // 2. INSTANCIAR A CAMADA DE APRESENTAÇÃO (CONTROLADORAS)
+    // Instaciações das classes de apresentação
     CntrApresentacaoGerente cntrGerente;
     CntrApresentacaoHotel cntrHotel;
     CntrApresentacaoQuarto cntrQuarto;
     CntrApresentacaoHospede cntrHospede;
     CntrApresentacaoReserva cntrReserva;
 
-    // 3. INJEÇÃO DE DEPENDÊNCIA (LIGAR APRESENTAÇÃO -> SERVIÇO)
+    // Associação da camada de apresentação com de serviço
     cntrGerente.setServicoGerente(&containerGerente);
     
     cntrHotel.setServicoHotel(&containerHotel);
     
     cntrQuarto.setServicoQuarto(&containerQuarto);
-    cntrQuarto.setServicoHotel(&containerHotel); // Quarto precisa saber dos Hoteis
+    cntrQuarto.setServicoHotel(&containerHotel);
     
     cntrHospede.setServicoHospede(&containerHospede);
     
@@ -37,14 +37,14 @@ int main() {
     cntrReserva.setServicoHospede(&containerHospede);
     cntrReserva.setServicoHotel(&containerHotel);
 
-    // 4. FLUXO PRINCIPAL DO PROGRAMA
+    //Fluxo do programa
     Gerente* gerenteLogado = nullptr;
 
     while (true) {
         if (gerenteLogado == nullptr) {
-            // --- TELA DE LOGIN / CADASTRO ---
+            //Tela inicial para cadastro/login/saída
             int opcao;
-            cout << "\n### SISTEMA HOTELEIRO - BEM VINDO ###\n";
+            cout << "\n SISTEMA HOTELEIRO \n";
             cout << "1. Login\n";
             cout << "2. Cadastrar Novo Gerente\n";
             cout << "0. Sair\n";
@@ -60,9 +60,9 @@ int main() {
             }
         } 
         else {
-            // --- TELA LOGADA ---
+            // Tela logada
             int opcao;
-            cout << "\n### MENU PRINCIPAL (" << gerenteLogado->getNome().getValor() << ") ###\n";
+            cout << "\nMENU PRINCIPAL (" << gerenteLogado->getNome().getValor() << ")\n";
             cout << "1. Gerenciar Hoteis\n";
             cout << "2. Gerenciar Quartos\n";
             cout << "3. Gerenciar Hospedes\n";
@@ -79,12 +79,12 @@ int main() {
                     else if (opHotel == 2) cntrHotel.listarHoteis();
                     break;
                 case 2: // SUBMENU QUARTO
-                    cntrQuarto.criarQuarto(); // Adapte para ter submenu igual ao hotel
+                    cntrQuarto.criarQuarto();
                     break;
-                case 3:
+                case 3: // SUBMENU HOSPEDE
                     cntrHospede.criarHospede();
                     break;
-                case 4:
+                case 4: // SUBMENU RESERVA
                     cntrReserva.criarReserva();
                     break;
                 case 5:
