@@ -13,7 +13,7 @@ public:
     void setServicoGerente(IServicoGerente* servico) { servicoGerente = servico; }
     void criarConta();
     void editarConta(Gerente* logado);
-    void excluirConta(Gerente* logado);
+    void excluirConta(Gerente*& logado);
     Gerente* autenticar();
 };
 
@@ -24,7 +24,7 @@ private:
 public:
     void setServicoHotel(IServicoHotel* servico) { servicoHotel = servico; }
     void criarHotel(Gerente* logado);
-    void listarHoteis();
+    void listarHoteis(Gerente* gerenteLogado); // MODIFIED
     void editar(Gerente* logado);
     void excluir(Gerente* logado);
 };
@@ -33,18 +33,18 @@ public:
 class CntrApresentacaoQuarto {
 private:
     IServicoQuarto* servicoQuarto;
-    IServicoHotel* servicoHotel; // Necessário para associar o quarto a um hotel existente
+    IServicoHotel* servicoHotel; // Necessario para associar o quarto a um hotel existente
 public:
     void setServicoQuarto(IServicoQuarto* sQuarto) { servicoQuarto = sQuarto; }
     void setServicoHotel(IServicoHotel* sHotel) { servicoHotel = sHotel; }
     
-    void criarQuarto();
-    void listarQuartos();
-    void editarQuarto();
-    void excluirQuarto();
+    void criarQuarto(Gerente* gerenteLogado); // MODIFIED
+    void listarQuartos(Gerente* gerenteLogado); // MODIFIED
+    void editarQuarto(Gerente* gerenteLogado); // MODIFIED
+    void excluirQuarto(Gerente* gerenteLogado); // MODIFIED
 };
 
-// Hóspede
+// Hospede
 class CntrApresentacaoHospede {
 private:
     IServicoHospede* servicoHospede;
@@ -61,7 +61,7 @@ class CntrApresentacaoReserva {
 private:
     IServicoReserva* servicoReserva;
     IServicoQuarto* servicoQuarto;   // Para verificar disponibilidade
-    IServicoHospede* servicoHospede; // Para associar hóspede
+    IServicoHospede* servicoHospede; // Para associar hospede
     IServicoHotel* servicoHotel;     // Para selecionar hotel
 public:
     void setServicoReserva(IServicoReserva* sReserva) { servicoReserva = sReserva; }
@@ -69,10 +69,10 @@ public:
     void setServicoHospede(IServicoHospede* sHospede) { servicoHospede = sHospede; }
     void setServicoHotel(IServicoHotel* sHotel) { servicoHotel = sHotel; }
 
-    void criarReserva();
-    void editarReserva();
-    void listarReservas();
-    void excluirReserva();
+    void criarReserva(Gerente* gerenteLogado); // MODIFIED
+    void editarReserva(Gerente* gerenteLogado); // MODIFIED
+    void listarReservas(Gerente* gerenteLogado); // MODIFIED
+    void excluirReserva(Gerente* gerenteLogado); // MODIFIED
 };
 
 #endif

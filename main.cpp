@@ -10,25 +10,25 @@ using namespace std;
 
 int main() {
 
-    // 1. INSTANCIAR A CAMADA DE SERVIÇO (BANCO DE DADOS EM MEMÓRIA)
-    // Instanciar ContainerReserva primeiro, pois é uma dependência
+    // 1. INSTANCIAR A CAMADA DE SERVICO (BANCO DE DADOS EM MEMORIA)
+    // Instanciar ContainerReserva primeiro, pois e uma dependencia
     ContainerReserva containerReserva("reservas.txt");
     // Instanciar ContainerQuarto e ContainerHospede, passando containerReserva
     ContainerQuarto containerQuarto("quartos.txt", &containerReserva);
     ContainerHospede containerHospede("hospedes.txt", &containerReserva);
     // Instanciar ContainerHotel, passando containerQuarto e containerReserva
     ContainerHotel containerHotel("hoteis.txt", &containerQuarto, &containerReserva);
-    // ContainerGerente não tem dependências de outros serviços
+    // ContainerGerente nao tem dependencias de outros servicos
     ContainerGerente containerGerente("gerentes.txt");
 
-    // Instaciações das classes de apresentação
+    // Instaciacoes das classes de apresentacao
     CntrApresentacaoGerente cntrGerente;
     CntrApresentacaoHotel cntrHotel;
     CntrApresentacaoQuarto cntrQuarto;
     CntrApresentacaoHospede cntrHospede;
     CntrApresentacaoReserva cntrReserva;
 
-    // Associação da camada de apresentação com de serviço
+    // Associacao da camada de apresentacao com de servico
     cntrGerente.setServicoGerente(&containerGerente);
     
     cntrHotel.setServicoHotel(&containerHotel);
@@ -48,7 +48,7 @@ int main() {
 
     while (true) {
         if (gerenteLogado == nullptr) {
-            //Tela inicial para cadastro/login/saída
+            //Tela inicial para cadastro/login/saida
             int opcao;
             cout << "\n SISTEMA HOTELEIRO \n";
             cout << "1. Login\n";
@@ -91,7 +91,7 @@ int main() {
                     } else if (opConta == 2) {
                         cntrGerente.excluirConta(gerenteLogado);
                         if (gerenteLogado == nullptr) {
-                            cout << "Sua conta foi excluída. Você foi desconectado.\n";
+                            cout << "Sua conta foi excluida. Voce foi desconectado.\n";
                             break;
                         }
                     }
@@ -102,8 +102,8 @@ int main() {
                     cout << "1. Criar Hotel | 2. Listar Hoteis | 3. Editar Hotel | 4. Excluir Hotel | 0. Voltar: ";
                     cin >> opHotel;
                     cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear buffer
-                    if (opHotel == 1) cntrHotel.criarHotel(gerenteLogado);
-                    else if (opHotel == 2) cntrHotel.listarHoteis();
+                    if (opHotel == 1) cntrHotel.criarHotel(gerenteLogado); // MODIFIED
+                    else if (opHotel == 2) cntrHotel.listarHoteis(gerenteLogado); // MODIFIED
                     else if (opHotel == 3) cntrHotel.editar(gerenteLogado);
                     else if (opHotel == 4) cntrHotel.excluir(gerenteLogado);
                     break;
@@ -114,10 +114,10 @@ int main() {
                     cout << "1. Criar Quarto | 2. Listar Quartos | 3. Editar Quarto | 4. Excluir Quarto | 0. Voltar: ";
                     cin >> opQuarto;
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    if (opQuarto == 1) cntrQuarto.criarQuarto();
-                    else if (opQuarto == 2) cntrQuarto.listarQuartos();
-                    else if (opQuarto == 3) cntrQuarto.editarQuarto();
-                    else if (opQuarto == 4) cntrQuarto.excluirQuarto();
+                    if (opQuarto == 1) cntrQuarto.criarQuarto(gerenteLogado); // MODIFIED
+                    else if (opQuarto == 2) cntrQuarto.listarQuartos(gerenteLogado); // MODIFIED
+                    else if (opQuarto == 3) cntrQuarto.editarQuarto(gerenteLogado); // MODIFIED
+                    else if (opQuarto == 4) cntrQuarto.excluirQuarto(gerenteLogado); // MODIFIED
                     break;
                 }
                 case 4: { // SUBMENU HOSPEDE
@@ -136,10 +136,10 @@ int main() {
                     cout << "1. Criar Reserva | 2. Listar Reservas | 3. Editar Reserva | 4. Excluir Reserva | 0. Voltar: ";
                     cin >> opReserva;
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    if (opReserva == 1) cntrReserva.criarReserva();
-                    else if (opReserva == 2) cntrReserva.listarReservas();
-                    else if (opReserva == 3) cntrReserva.editarReserva();
-                    else if (opReserva == 4) cntrReserva.excluirReserva();
+                    if (opReserva == 1) cntrReserva.criarReserva(gerenteLogado); // MODIFIED
+                    else if (opReserva == 2) cntrReserva.listarReservas(gerenteLogado); // MODIFIED
+                    else if (opReserva == 3) cntrReserva.editarReserva(gerenteLogado); // MODIFIED
+                    else if (opReserva == 4) cntrReserva.excluirReserva(gerenteLogado); // MODIFIED
                     break;
                 }
                 case 0:
